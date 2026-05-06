@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UKW Tennis Turnier Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: white;
+
+            background-image: url("https://tennis-uni.com/wp-content/uploads/tennisplatz-sand.jpeg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .card {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        input:disabled {
+            background: #eee;
+            color: #777;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        /* 🔵 BLAUER BEREICH UNTER FORM */
+        .footer-blue {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+        }
+
+        .footer-blue img {
+            width: 220px;
+            max-width: 80%;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .footer-blue .name {
+            font-size: 14px;
+            opacity: 0.85;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>UKW Tennis Turnier Manager</h2>
+
+    <form action="/turnier" method="post">
+
+        <label>Modus</label>
+        <select id="modus" name="modus">
+            <option value="einzel">Einzel</option>
+            <option value="herren">Herren Doppel</option>
+            <option value="damen">Damen Doppel</option>
+            <option value="mixed">Mixed Doppel</option>
+        </select>
+
+        <label>Männer</label>
+        <input id="maenner" name="maenner" placeholder="Tom, Max, Paul">
+
+        <label>Frauen</label>
+        <input id="frauen" name="frauen" placeholder="Anna, Lisa, Maria">
+
+        <label>Runden</label>
+        <input id="runden" name="runden" type="number" value="3">
+
+        <div class="hint">
+             Einzel: Runden deaktiviert • Doppel: frei einstellbar
+        </div>
+
+        <button class="btn" type="submit">Turnier starten</button>
+
+    </form>
+
+</div>
+
+<!-- 🔵 BLAUER BEREICH UNTER DER CARD -->
+<div class="footer-blue">
+
+    <img src="https://ukw.cc/wp-content/uploads/2023/11/logo.webp"
+         alt="Union Königswiesen Tennis">
+
+    <div class="name">
+        Philipp Heins
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const modus = document.getElementById("modus");
+        const maenner = document.getElementById("maenner");
+        const frauen = document.getElementById("frauen");
+        const runden = document.getElementById("runden");
+
+        function updateForm() {
+
+            maenner.disabled = false;
+            frauen.disabled = false;
+            runden.disabled = false;
+
+            if (modus.value === "einzel") {
+
+                runden.disabled = true;
+
+                maenner.oninput = function () {
+                    frauen.disabled = maenner.value.trim() !== "";
+                };
+
+                frauen.oninput = function () {
+                    maenner.disabled = frauen.value.trim() !== "";
+                };
+
+            } else if (modus.value === "herren") {
+                frauen.disabled = true;
+                maenner.oninput = null;
+                frauen.oninput = null;
+
+            } else if (modus.value === "damen") {
+                maenner.disabled = true;
+                maenner.oninput = null;
+                frauen.oninput = null;
+
+            } else if (modus.value === "mixed") {
+                maenner.disabled = false;
+                frauen.disabled = false;
+                maenner.oninput = null;
+                frauen.oninput = null;
+            }
+        }
+
+        modus.addEventListener("change", updateForm);
+        updateForm();
+    });
+</script>
+
+</body>
+</html>
